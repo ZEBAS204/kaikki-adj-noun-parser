@@ -1,0 +1,9 @@
+__pycache__/
+__pytest_cache__/
+__logs/
+env/
+venv/
+
+sets/
+dict/
+
