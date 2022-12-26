@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-import sys
 import logging
-import pycountry
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+
+import pycountry
 
 
 languages_url = "https://kaikki.org/dictionary/index.html"
@@ -47,7 +48,7 @@ def file_retrieve(url, dest) -> bool:
                     logging.warning("Content too short: %s - will retry", url)
                     continue
 
-                logging.warning("Max retries exceeded", url)
+                logging.warning("Max retries exceeded %s", url)
                 break
 
             except urllib.request.HTTPError as err:
@@ -113,17 +114,17 @@ def downloadLanguageSets(lang: str, dest=None):
 
 def fetch_set(lang: str, location=None):
     if not type(lang) is str:
-        raise Exception("Language code must be a string")
+        raise ValueError("Language code must be a string")
 
     if not lang or lang.isspace():
-        raise Exception("Language code must be provided")
+        raise ValueError("Language code must be provided")
 
     if location is not None:
         if not type(location) is str:
-            raise Exception("Location must be a string")
+            raise ValueError("Location must be a string")
 
         if location.isspace():
-            raise Exception("Location can not be empty")
+            raise ValueError("Location can not be empty")
 
     logging.debug(f"Fetching {lang}...")
     downloadLanguageSets(lang, location)
