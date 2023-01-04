@@ -3,8 +3,9 @@
 import argparse
 import logging
 import multiprocessing
+import sys
 
-from fetch_sets import fetch_set
+from fetch_sets import fetch_set, get_supported_languages
 
 # New parser
 parser = argparse.ArgumentParser(
@@ -37,6 +38,25 @@ optional.add_argument(
     action="help",
     default=argparse.SUPPRESS,
     help="Show this help message and exit",
+)
+
+
+# Little trick to bypass the required attribute error
+class langAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string):
+        print("Supported Languages:")
+        for lang in get_supported_languages():
+            print(f"* {lang['name']}")
+        # To avoid the required arguments error, we immediately exit
+        sys.exit(0)
+
+
+optional.add_argument(
+    "-s",
+    "--supported-languages",
+    nargs="?",
+    action=langAction,
+    help="Show all supported languages in the dictionary",
 )
 
 # This is the correct way to handle accepting multiple arguments.

@@ -8,6 +8,7 @@ import urllib.request
 from pathlib import Path
 
 import pycountry
+from bs4 import BeautifulSoup, SoupStrainer
 
 
 languages_url = "https://kaikki.org/dictionary/index.html"
@@ -18,6 +19,33 @@ except urllib.request.HTTPError as err:
     logging.critical("Cannot get document of all available languages on Kaikki")
     logging.exception(err)
     sys.exit(0)
+
+
+def get_supported_languages():
+    import re
+
+    r = urllib.request.urlopen(languages_url)
+    htmlContent = r.read()
+
+    only_li_tags = SoupStrainer("li")
+    soup = BeautifulSoup(htmlContent, "html.parser", parse_only=only_li_tags)
+
+    anchors = soup.find_all("a")
+
+    supported_languages = []
+    for link in anchors:
+        href = link.get("href")
+        if href != "#" and "./" not in href and "combined" not in href:
+            lang_name = re.sub(r"(\s?\(.+?\))", "", link.contents[0])
+            lang_link = f"{languages_url.replace('index.html', '')}{href}"
+            supported_languages.append(
+                {
+                    "name": lang_name.replace(" ", "_"),
+                    "link": lang_link,
+                }
+            )
+
+    return supported_languages
 
 
 def file_retrieve(url, dest) -> bool:
