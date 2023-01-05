@@ -81,6 +81,7 @@ def file_retrieve(url, dest) -> bool:
 
             except urllib.request.HTTPError as err:
                 logging.exception(err)
+                logging.error("Error while retrieving from %s", url)
                 break
 
     logging.error(f"Cannot get language set: {filename}")
@@ -91,16 +92,15 @@ def downloadLanguageSets(lang: str, dest=None):
     extension = ".kds"  # Stands for Kaikki Dictionary Set
 
     if dest == None:
-        dest = (Path() / "./sets").resolve()
+        dest = Path("sets").resolve()
     else:
-        if not type(dest) is str:
+        if type(dest) is not str:
             logging.critical("The destination path expected a string")
             return
-
         dest = Path(dest).resolve()
-        if not dest.is_dir():
-            logging.critical("The destination path specified does not exist")
-            return
+
+    # Create folder if does not exists
+    dest.mkdir(exist_ok=True, parents=True)
 
     countryCode = pycountry.languages.get(name=lang)
     if not countryCode:
@@ -141,14 +141,14 @@ def downloadLanguageSets(lang: str, dest=None):
 
 
 def fetch_set(lang: str, location=None):
-    if not type(lang) is str:
+    if type(lang) is not str:
         raise ValueError("Language code must be a string")
 
     if not lang or lang.isspace():
         raise ValueError("Language code must be provided")
 
     if location is not None:
-        if not type(location) is str:
+        if type(location) is not str:
             raise ValueError("Location must be a string")
 
         if location.isspace():
