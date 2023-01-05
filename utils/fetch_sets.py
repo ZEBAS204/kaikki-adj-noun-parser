@@ -124,8 +124,8 @@ def downloadLanguageSets(lang: str, dest=None):
     urlLang = lang.replace(" ", "%20")
     # * Kaikki uses Pascalcase without spaces for file names
     urlFile = lang.replace(" ", "")
-    noun = f"https://kaikki.org/dictionary/{urlLang}/by-pos/adj/kaikki.org-dictionary-{urlFile}-by-pos-adj.json"
-    adj = f"https://kaikki.org/dictionary/{urlLang}/by-pos/noun/kaikki.org-dictionary-{urlFile}-by-pos-noun.json"
+    noun = f"https://kaikki.org/dictionary/{urlLang}/by-pos-adj/kaikki_dot_org-dictionary-{urlFile}-by-pos-adj.json"
+    adj = f"https://kaikki.org/dictionary/{urlLang}/by-pos-noun/kaikki_dot_org-dictionary-{urlFile}-by-pos-noun.json"
 
     nouns_success = file_retrieve(noun, noun_dest)
     adj_success = file_retrieve(adj, adj_dest)
