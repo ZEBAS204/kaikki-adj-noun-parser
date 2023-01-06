@@ -10,7 +10,6 @@ from pathlib import Path
 import pycountry
 from bs4 import BeautifulSoup, SoupStrainer
 
-
 languages_url = "https://kaikki.org/dictionary/index.html"
 try:
     urllib.request.urlopen(languages_url)

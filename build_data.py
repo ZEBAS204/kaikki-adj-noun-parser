@@ -106,4 +106,3 @@ def get_wordsets(directory=None, data_file_path=None, store=False):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     get_wordsets(None, None, True)
-    pass
