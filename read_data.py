@@ -22,7 +22,12 @@ def save_dictionary(filePath, lang, wordType, words):
         )
 
 
+# *  Flag to handle interruptions
+__INTERRUPTED__ = False
+
+
 def handle_wordsets(lang: str, wordSet, destination=None):
+    global __INTERRUPTED__
     logging.debug(f"Handling language: {lang}")
 
     if destination is None:
@@ -32,6 +37,9 @@ def handle_wordsets(lang: str, wordSet, destination=None):
         destination = Path(".")
 
     for wordFile in [wordSet["noun"], wordSet["adj"]]:
+        if __INTERRUPTED__:
+            break
+
         # * Get current word type (noun or adj)
         wordType = [k for k, v in wordSet.items() if v == wordFile][0]
         directory = Path(wordFile).resolve()
@@ -49,27 +57,33 @@ def handle_wordsets(lang: str, wordSet, destination=None):
             # * If you will like to also check for duplicates, then replace it with an
             # * array, replace line 32 'add' with 'append' and uncomment the bottom lines.
             words = set()
-            
-            # * As every line is it's own object, we need to loop every line
-            # * If we try to parse it with json, then an error will be raised.
-            totalIgnored = 0
-            for line in f:
-                data = json.loads(line)
-                thisWord = data["word"].lower()
-                thisWordSenses = get_word_tags(data=data)
+            try:
+                # * As every line is it's own object, we need to loop every line
+                # * If we try to parse it with json, then an error will be raised.
+                totalIgnored = 0
+                for line in f:
+                    data = json.loads(line)
+                    thisWord = data["word"].lower()
+                    thisWordSenses = get_word_tags(data=data)
 
-                if is_tag_blacklisted(thisWordSenses, thisWord):
-                    totalIgnored += 1
-                    logging.debug(f"{thisWord} is blacklisted.")
-                    continue
+                    if is_tag_blacklisted(thisWordSenses, thisWord):
+                        totalIgnored += 1
+                        logging.debug(f"{thisWord} is blacklisted.")
+                        continue
 
-                if is_word_used(thisWord, lang):
-                    words.add(thisWord)
+                    if is_word_used(thisWord, lang):
+                        words.add(thisWord)
 
-            logging.info(
-                f"A total of {totalIgnored} words where ignored for the {lang} language"
-            )
-            save_dictionary(filePath, lang, wordType, words)
+                logging.info(
+                    f"A total of {totalIgnored} words where ignored for the {lang} language"
+                )
+
+            # Prevent abrupt interruption and
+            # allow to save any processed words
+            except KeyboardInterrupt:
+                __INTERRUPTED__ = True
+            finally:
+                save_dictionary(filePath, lang, wordType, words)
 
 
 # Loop through all words
