@@ -169,9 +169,6 @@ def get_word_tags(data: dict):
 
 
 def is_tag_blacklisted(tags: set, word):
-    if not tags:
-        return False
-
     # If word is spaced, then is probably a say and should be skipped
     # Instead of regex, use split as the default includes all whitespaced characters
     # Max split is set to 1 as checking multiple spaces is pointless
@@ -190,7 +187,7 @@ def is_tag_blacklisted(tags: set, word):
             return True
 
     # Check if contains any blacklisted tag
-    if any(i in tags for i in __blacklisted_tags__):
+    if tags and any(i in tags for i in __blacklisted_tags__):
         logging.debug(f"{word} contains a blacklisted tag")
         save_blacklisted_word(word)
         return True
