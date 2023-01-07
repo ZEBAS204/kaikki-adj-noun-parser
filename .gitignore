@@ -4,6 +4,7 @@ __logs/
 env/
 venv/
 
-sets/
-dict/
-
+sets/*
+dict/*
+!**/.gitkeep
+!**/README.md

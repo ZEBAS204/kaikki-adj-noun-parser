@@ -1,0 +1,8 @@
+.*
+**/__logs
+**/__pycache__
+**/__pytest_cache__
+test
+LICENSE
+*.md
+!README.md
