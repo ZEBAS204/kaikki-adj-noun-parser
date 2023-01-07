@@ -238,9 +238,9 @@ def is_word_used(
     :return: A bool
     """
 
-    # * If the provided word is made by more than just a single word,
-    # * then is probably a say and should be skipped.
-    if len(tokenize(word, lang)) != 1:
+    # As some of the words may be hyphenated words,
+    # we separate and reject any words that tokenize to more than two words
+    if len(tokenize(word, lang)) > 2:
         return False
 
     frequency = word_frequency(word, lang, wordlist, minimum)
