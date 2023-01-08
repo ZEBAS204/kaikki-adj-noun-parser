@@ -4,5 +4,6 @@
 **/__pytest_cache__
 test
 LICENSE
+*.txt
 *.md
 !README.md

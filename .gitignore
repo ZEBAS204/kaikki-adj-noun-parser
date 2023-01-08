@@ -4,6 +4,7 @@ __logs/
 env/
 venv/
 
+**/*.txt
 sets/*
 dict/*
 !**/.gitkeep
