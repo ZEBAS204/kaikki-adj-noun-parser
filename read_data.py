@@ -52,6 +52,10 @@ def handle_wordsets(lang: str, wordSet, destination=None):
             logging.info(f'File "{directory.name}" already exists.')
             continue
 
+        if not directory.exists():
+            logging.error(f'File "{directory.name}" does not exists in directory')
+            continue
+
         with open(f"{directory}", "r", encoding="utf-8") as f:
             # * To avoid duplicated words, we need to create a set.
             # * If you will like to also check for duplicates, then replace it with an
