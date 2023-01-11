@@ -65,8 +65,14 @@ def handle_wordsets(lang: str, wordSet, destination=None):
                 # * As every line is it's own object, we need to loop every line
                 # * If we try to parse it with json, then an error will be raised.
                 totalIgnored = 0
-                for line in f:
-                    data = json.loads(line)
+                for line_number, line in enumerate(f, 1):
+                    try:
+                        data = json.loads(line)
+                    except json.JSONDecodeError:
+                        logging.error(
+                            f"Error parsing {directory.name} at line {line_number}"
+                        )
+                        continue
                     thisWord = data["word"].lower()
                     thisWordSenses = get_word_tags(data=data)
 

@@ -52,7 +52,12 @@ def extract_tags(kds_set_file):
     print(f"Extracting tags from: {kds_set_file}")
     with open(f"{kds_set_file}", "r", encoding="utf-8") as f:
         # every line is a JSON object
-        for line in f:
+        for line_number, line in enumerate(f, 1):
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError:
+                print(f"Error parsing {kds_set_file.name} at line {line_number}")
+                continue
             data = json.loads(line)
             tags = get_word_tags(data=data)
             for tag in tags:
