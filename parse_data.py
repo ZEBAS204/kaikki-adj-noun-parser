@@ -33,8 +33,10 @@ def handle_wordsets(lang: str, wordSet, destination=None):
     if destination is None:
         destination = Path("dict").resolve()
     else:
-        # TODO: destination
-        destination = Path(".")
+        if type(destination) is not str:
+            logging.critical("The destination path expected a string")
+            return
+        destination = Path(destination).resolve()
 
     for wordFile in [wordSet["noun"], wordSet["adj"]]:
         if __INTERRUPTED__:
