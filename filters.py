@@ -4,11 +4,29 @@ import re
 from wordfreq import tokenize, word_frequency
 
 __blacklisted_tags__ = [
+    # Run utils/get_tags.py to get all tags from sets more easily
+    "noun-from-verb",
     "abbreviation",
+    "alternative",
+    "affirmative",
+    "interrogative",
+    "derogatory",
     "initialism",
-    "slang",
-    "vulgar",
+    "nonce-word",
+    # "pejorative",  #! may blacklist any "bad" adjective
+    # "offensive",  #! may blacklist any "bad" adjective
+    "adverbial",
+    "character",
     "obsolete",
+    "acronym",
+    "article",
+    "numeral",
+    # "vulgar", #! may blacklist any "bad" adjective
+    "alt-of",
+    "nazism",
+    "slang",
+    "slur",
+    "name",
 ]
 
 """
@@ -17,7 +35,7 @@ __blacklisted_tags__ = [
 """
 # We use `string.punctuation` to blacklist any ASCII characters
 # which are considered punctuation characters (in the C locale)
-__blacklisted_characters__ = "°!¡\"#$%&'()*+,./:;<=>¿?@[\\]^_`{|}~"
+__blacklisted_characters__ = "°!¡\"#$%&'()*+,./:;<=>¿?@[\\]^_`{|}~−♯£"
 
 """
 * The more completed blacklist of characters
@@ -168,7 +186,32 @@ def get_word_tags(data: dict):
     return tags
 
 
-def is_tag_blacklisted(tags: set, word):
+def blacklist_synonyms(data: dict):
+    alts = set()
+
+    if "forms" in data:
+        for forms in data["forms"]:
+            alts.add(forms["form"])
+
+    if "synonyms" in data:
+        for synonym in data["synonyms"]:
+            alts.add(synonym["word"].lower())
+
+    logging.debug(f"Found a total of {len(alts)} synonyms for the word {data['word']}")
+    for word in alts:
+        save_blacklisted_word(word, "alt-of", data["word"])
+
+
+def add_word_to_blacklist(word, data: dict):
+    """
+    Add the given word to the blacklist and
+    all it's synonyms/alternative-forms.
+    """
+    save_blacklisted_word(word)
+    blacklist_synonyms(data)
+
+
+def is_tag_blacklisted(data, word):
     # If word is spaced, then is probably a say and should be skipped
     # Instead of regex, use split as the default includes all whitespaced characters
     # Max split is set to 1 as checking multiple spaces is pointless
@@ -186,10 +229,13 @@ def is_tag_blacklisted(tags: set, word):
             logging.debug(f"({char}) - {word} contains a blacklisted character")
             return True
 
+    # Get tags
+    tags = get_word_tags(data)
+
     # Check if contains any blacklisted tag
     if tags and any(i in tags for i in __blacklisted_tags__):
         logging.debug(f"{word} contains a blacklisted tag")
-        save_blacklisted_word(word)
+        add_word_to_blacklist(word, data)
         return True
 
     # Check if was previously blacklisted
@@ -203,16 +249,6 @@ def is_tag_blacklisted(tags: set, word):
         logging.debug(f"{word} contains a blacklisted unicode character!")
         save_blacklisted_word(word)
         return True
-
-    # Check if matches any previously blacklisted word
-    # ! May degrade performance over time
-    for blackListedWord in __wasblacklisted__:
-        if bool(re.match(rf"{re.escape(word)}", re.escape(blackListedWord))):
-            logging.debug(
-                f"A previously word was blacklisted:\nVariation: {word} -> blacklisted: {blackListedWord}"
-            )
-            save_blacklisted_word(word, "alter", blackListedWord)
-            return True
 
     # * Not a blacklisted word
     return False
@@ -241,6 +277,7 @@ def is_word_used(
     # As some of the words may be hyphenated words,
     # we separate and reject any words that tokenize to more than two words
     if len(tokenize(word, lang)) > 2:
+        logging.info(f"Ignoring word by tokenization length: {word}")
         return False
 
     frequency = word_frequency(word, lang, wordlist, minimum)

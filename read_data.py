@@ -4,7 +4,7 @@ from pathlib import Path
 from time import process_time as perfTime
 
 from build_data import get_wordsets
-from filters import clear_blacklisted, get_word_tags, is_tag_blacklisted, is_word_used
+from filters import clear_blacklisted, is_tag_blacklisted, is_word_used
 
 # Your sets to get the words from
 word_sets_files = get_wordsets()
@@ -74,9 +74,8 @@ def handle_wordsets(lang: str, wordSet, destination=None):
                         )
                         continue
                     thisWord = data["word"].lower()
-                    thisWordSenses = get_word_tags(data=data)
 
-                    if is_tag_blacklisted(thisWordSenses, thisWord):
+                    if is_tag_blacklisted(data, thisWord):
                         totalIgnored += 1
                         logging.debug(f"{thisWord} is blacklisted.")
                         continue
