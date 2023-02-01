@@ -20,6 +20,17 @@ $ source env/bin/activate
 $ python3 -m pip install -r requirements.txt
 ```
 
+## Usage
+
+```console
+# After downloading the wordsets (.kds), run the
+# build_data script to generate the wordsets.json
+$ python3 build_data.py
+
+# Now, you can parse the sets:
+$ python3 parse_data.py
+```
+
 ### Requirements
 
 - [Kaikki dictionary](https://kaikki.org/dictionary/) ([Wiktextract](https://github.com/tatuylonen/wiktextract) can be used to generate the same dictionaries if you wish so).
