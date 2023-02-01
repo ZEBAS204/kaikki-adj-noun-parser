@@ -41,7 +41,7 @@ $ python3 parse_data.py
 
 If you want to use the CLI, some additional dependencies are needed:
 
-- [Pycountry](https://github.com/flyingcircusio/pycountry) (used to )
+- [Pycountry](https://github.com/flyingcircusio/pycountry) (used to get the country code of languages)
 - [beautifulsoup4](https://pypi.org/project/beautifulsoup4/) (used to parse Kaikki's web page for all available dictionaries)
 
 ## How does it work
