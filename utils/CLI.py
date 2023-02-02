@@ -13,11 +13,11 @@ parser = argparse.ArgumentParser(
     description="Fetch a language or multiple languages from the command line",
     epilog="""Usage example:
       * Single language:
-        fetch_sets.py -lang english
+        CLI.py -lang english
 
       * Multiple languages:
-        fetch_sets.py -lang English Spanish --loc ../my_new_folder
-        fetch_sets.py -lang english middle_english ./sets_new
+        CLI.py -lang English Spanish --loc ../my_new_folder
+        CLI.py -lang english middle_english ./sets_new
 
 
       See all supported languages here:
