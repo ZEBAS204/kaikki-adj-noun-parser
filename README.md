@@ -111,7 +111,7 @@ To make it easier to understand, for example, I will go step by step to manually
 ## Known issues
 
 - Cursed/bad words are not filtered correctly
-  (to get around this issue, you can use [Bad words list](https://github.com/hughsie/badwords) to later filter it)
+  (to get around this issue, you can use "[Bad words list](https://github.com/hughsie/badwords)" or "[List of Dirty, Naughty, Obscene, and Otherwise Bad Words](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/)" to later filter it)
 - Does not differentiate dialects (e.g. American and British English)
 - Sometimes single letters can not be filtered as they "mean" something (eg. the meaning of "a" is "letter A")
 - Some words are wrongly categorized (eg. a noun that is a suffix or a verb)
