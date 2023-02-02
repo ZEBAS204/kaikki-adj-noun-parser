@@ -2,6 +2,9 @@
 
 This tool is intended to be used to create a set of dictionaries composed of two files, nouns and adjectives in JSON format.
 
+## Download pre-processed wordsets
+If you want to download some generated wordsets, check out the [Releases page](https://github.com/ZEBAS204/kaikki-adj-noun-parser/releases) and you will find a `dictionaries.zip ` and the languages included in the release's description.
+
 ## Installation
 
 ```console
